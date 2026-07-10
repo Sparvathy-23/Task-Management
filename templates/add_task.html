@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Task</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-body">
+    <header class="app-bar">
+        <h2 class="app-title">Task Hub</h2>
+        <a href="{{ url_for('dashboard') }}" class="nav-link-btn">← Back</a>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="management-card form-constrained">
+            <h3 class="card-header">Add New Task</h3>
+            <div class="card-body">
+                <form id="new-task-form" onsubmit="createNewTask(event)">
+                    <div class="form-row">
+                        <label for="ins-title">Task Title:</label>
+                        <select id="ins-title" required>
+                            <option value="">-- Choose Title --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="ins-employee">Employee:</label>
+                        <select id="ins-employee" required>
+                            <option value="">-- Choose Employee --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="ins-completed">Completed initially?</label>
+                        <select id="ins-completed">
+                            <option value="No">False</option>
+                            <option value="Yes">True</option>
+                        </select>
+                    </div>
+
+                    <p class="helper-text">* Task ID is auto-incremented sequentially by the database core.</p>
+
+                    <div class="form-submit-row">
+                        <button type="submit" class="action-btn">Register Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch('/api/task_titles')
+                .then(res => res.json())
+                .then(data => {
+                    const dropdown = document.getElementById('ins-title');
+                    data.forEach(t => dropdown.innerHTML += `<option value="${t.title_id}">${t.title}</option>`);
+                });
+
+            fetch('/api/employees')
+                .then(res => res.json())
+                .then(data => {
+                    const dropdown = document.getElementById('ins-employee');
+                    data.forEach(e => dropdown.innerHTML += `<option value="${e.employee_id}">${e.employee_name}</option>`);
+                });
+        });
+    </script>
+</body>
+</html>

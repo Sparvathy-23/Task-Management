@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-body">
+    <header class="app-bar">
+        <h2 class="app-title">Task Management</h2>
+        <div class="app-nav">
+            <a href="{{ url_for('add_task_page') }}" class="nav-link-btn">+ Add New Task</a>
+            <a href="{{ url_for('logout') }}" class="logout-link-btn">Logout</a>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="management-card">
+            <h3 class="card-header">Task Management</h3>
+            
+            <div class="card-body">
+                <div class="form-row">
+                    <label for="task-title-select">Task Title:</label>
+                    <select id="task-title-select" onchange="loadTitleInstances()">
+                        <option value="">-- Choose Task Title --</option>
+                    </select>
+                </div>
+
+                <div class="form-row" id="employee-row" style="display: none;">
+                    <label for="task-employee-select">Employee Name:</label>
+                    <select id="task-employee-select" onchange="loadSpecificInstance()">
+                        <!-- Loaded dynamically via JS -->
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>Task ID:</label>
+                    <input type="text" id="display-task-id" readonly class="readonly-input" placeholder="Automatically filled">
+                </div>
+
+                <div class="form-row">
+                    <label for="task-completed-select">Completed:</label>
+                    <select id="task-completed-select">
+                        <option value="0">False</option>
+                        <option value="1">True</option>
+                    </select>
+                </div>
+
+                <div class="form-submit-row">
+                    <button id="submit-btn" class="action-btn" onclick="submitStatusUpdate()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch('/api/task_titles')
+                .then(res => res.json())
+                .then(data => {
+                    const dropdown = document.getElementById('task-title-select');
+                    data.forEach(item => {
+                        dropdown.innerHTML += `<option value="${item.title_id}">${item.title}</option>`;
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
